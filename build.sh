@@ -43,5 +43,5 @@ if [[ ( $sum -ne 1 ) || ( ${REBUILD} == "true" ) ]];then
     docker push ${image}:${eks}
   fi
   # manually create tag from current version
-  echo "git tag ${eks}"
+  echo "git tag ${eks}; git push origin ${eks}"
 fi
