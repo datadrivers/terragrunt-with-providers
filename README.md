@@ -15,7 +15,7 @@ https://github.com/alpine-docker/terragrunt
 
 https://travis-ci.org/alpine-docker/terragrunt
 
-### Docker iamge tags:
+### Docker image tags:
 
 https://hub.docker.com/r/alpine/terragrunt/tags/
 

@@ -22,7 +22,7 @@ RUN wget -q ${TERRAFORM_PROVIDER_NEXUS_URL} && \
     tar -zxvf ${TERRAFORM_PROVIDER_NEXUS_ARCHIVE_FILENAME} && \
     rm ${TERRAFORM_PROVIDER_NEXUS_ARCHIVE_FILENAME}
 
-FROM hashicorp/terraform:TERRAFORM_VERSION
+FROM hashicorp/terraform:0.12.25
 
 ARG TERRAGRUNT
 
@@ -54,6 +54,7 @@ RUN curl -LO https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/d
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
     mv /tmp/eksctl /usr/bin && \
     chmod +x /usr/bin/eksctl
+
 
 WORKDIR /apps
 
