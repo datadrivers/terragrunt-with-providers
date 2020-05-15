@@ -55,7 +55,6 @@ RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/down
     mv /tmp/eksctl /usr/bin && \
     chmod +x /usr/bin/eksctl
 
-
 WORKDIR /apps
 
 ENTRYPOINT []

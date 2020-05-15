@@ -8,7 +8,7 @@
 
 set -ex
 
-image="alpine/terragrunt"
+image="1stevie1/terragrunt-with-providers"
 repo="hashicorp/terraform"
 
 if [[ ${CI} == 'true' ]]; then
@@ -42,5 +42,6 @@ if [[ ( $sum -ne 1 ) || ( ${REBUILD} == "true" ) ]];then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     docker push ${image}:${eks}
   fi
-
+  # manually create tag from current version
+  echo "git tag ${eks}"
 fi
