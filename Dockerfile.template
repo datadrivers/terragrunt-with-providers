@@ -24,7 +24,7 @@ RUN wget -q ${TERRAFORM_PROVIDER_NEXUS_URL} && \
 
 FROM hashicorp/terraform:TERRAFORM_VERSION
 
-ARG TERRAGRUNT
+ARG TERRAGRUNT=TERRAGRUNT_VERSION
 
 RUN apk add --update --no-cache bash git openssh
 
