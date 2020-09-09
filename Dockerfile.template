@@ -1,3 +1,4 @@
+ARG TERRAFORM_PROVIDER_NEXUS_VERSION=1.10.2
 # Create builder layer
 FROM alpine:3.11 as alpine-builder
 
@@ -9,11 +10,11 @@ RUN apk update \
 
 # Install TF Provider Nexus
 FROM alpine-builder as TERRAFORM_PROVIDER_NEXUS-BUILD
-ARG TERRAFORM_PROVIDER_NEXUS_VERSION=v1.10.2
+ARG TERRAFORM_PROVIDER_NEXUS_VERSION
 ENV TERRAFORM_PROVIDER_NEXUS_CHECKSUM="5e9b8196eb98a3badf6ff094dafe197eb995537e433be307054271175e34cb19"
-ENV TERRAFORM_PROVIDER_NEXUS_ARCHIVE_FILENAME=terraform-provider-nexus_${TERRAFORM_PROVIDER_NEXUS_VERSION}_linux_amd64.tar.gz
-ARG TERRAFORM_PROVIDER_NEXUS_FILENAME=terraform-provider-nexus_${TERRAFORM_PROVIDER_NEXUS_VERSION}
-ENV TERRAFORM_PROVIDER_NEXUS_URL=https://github.com/datadrivers/terraform-provider-nexus/releases/download/${TERRAFORM_PROVIDER_NEXUS_VERSION}/${TERRAFORM_PROVIDER_NEXUS_ARCHIVE_FILENAME}
+ENV TERRAFORM_PROVIDER_NEXUS_ARCHIVE_FILENAME=terraform-provider-nexus_v${TERRAFORM_PROVIDER_NEXUS_VERSION}_linux_amd64.tar.gz
+ARG TERRAFORM_PROVIDER_NEXUS_FILENAME=terraform-provider-nexus_v${TERRAFORM_PROVIDER_NEXUS_VERSION}
+ENV TERRAFORM_PROVIDER_NEXUS_URL=https://github.com/datadrivers/terraform-provider-nexus/releases/download/v${TERRAFORM_PROVIDER_NEXUS_VERSION}/${TERRAFORM_PROVIDER_NEXUS_ARCHIVE_FILENAME}
 
 RUN echo $TERRAFORM_PROVIDER_NEXUS_URL
 RUN wget -q ${TERRAFORM_PROVIDER_NEXUS_URL} && \
@@ -22,9 +23,9 @@ RUN wget -q ${TERRAFORM_PROVIDER_NEXUS_URL} && \
     tar -zxvf ${TERRAFORM_PROVIDER_NEXUS_ARCHIVE_FILENAME} && \
     rm ${TERRAFORM_PROVIDER_NEXUS_ARCHIVE_FILENAME}
 
-FROM hashicorp/terraform:TERRAFORM_VERSION
-
-ARG TERRAGRUNT=TERRAGRUNT_VERSION
+FROM hashicorp/terraform:REPLACE_TERRAFORM_VERSION
+ARG TERRAFORM_PROVIDER_NEXUS_VERSION
+ARG TERRAGRUNT=REPLACE_TERRAGRUNT_VERSION
 
 RUN apk add --update --no-cache bash git openssh
 
@@ -32,8 +33,8 @@ ADD https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT}/t
 
 RUN chmod +x /usr/local/bin/terragrunt
 
-# add custom providers
-COPY --from=TERRAFORM_PROVIDER_NEXUS-BUILD /terraform-provider-nexus_* /root/.terraform.d/plugins/linux_amd64/
+# add custom providers for TF 0.13 requires folder structure: HOSTNAME/NAMESPACE/TYPE/VERSION/TARGET
+COPY --from=TERRAFORM_PROVIDER_NEXUS-BUILD /terraform-provider-nexus_* /root/.terraform.d/plugins/registry.terraform.io/datadrivers/nexus/${TERRAFORM_PROVIDER_NEXUS_VERSION}/linux_amd64/
 
 # Add kubectl, aws_iam_auth for eks deployment
 ARG KUBECTL=1.18.6

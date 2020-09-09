@@ -35,7 +35,7 @@ do
 done
 
 if [[ ( $sum -ne 1 ) || ( ${REBUILD} == "true" ) ]];then
-  sed "s/TERRAFORM_VERSION/${latest}/;s/TERRAGRUNT_VERSION/${terragrunt}/" Dockerfile.template > Dockerfile
+  sed "s/REPLACE_TERRAFORM_VERSION/${latest}/;s/REPLACE_TERRAGRUNT_VERSION/${terragrunt}/" Dockerfile.template > Dockerfile
   docker build --build-arg TERRAGRUNT=${terragrunt} --no-cache -t ${image}:${eks} .
 
   if [[ "$TRAVIS_BRANCH" == "eks" ]]; then
