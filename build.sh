@@ -25,7 +25,7 @@ terragrunt=$(${CURL} https://api.github.com/repos/gruntwork-io/terragrunt/releas
 sum=0
 echo "Lastest terraform release is: ${latest}"
 
-tags=`curl -s https://hub.docker.com/v2/repositories/${image}/tags/ |jq -r .results[].name`
+tags=$(curl -s https://hub.docker.com/v2/repositories/${image}/tags/ |jq -r .results[].name)
 
 for tag in ${tags}
 do
